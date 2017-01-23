@@ -17,6 +17,7 @@ def demo():
 ```
 
 Arguments
+
     - Name of parameter
     - type (named param), optional paramter. The type in which the paramter is to be expeted. RequestParser will convert to specified type. Supported types:
         - int
