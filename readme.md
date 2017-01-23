@@ -2,8 +2,6 @@
 
 flask_reqparse is a simple wrapper around flask request module that helps to parse args efficently
 
-.. _reqparse:
-
 Request Parsing
 ===============
 
@@ -66,3 +64,6 @@ to specify alternate locations to pull the values from. Any variable on the
 
     # Look only in Form
     parser.add_argument('picture', type=str, location='form')
+
+
+Inspired from Flask-Restful Request Parser
