@@ -11,7 +11,7 @@ Basic Arguments
 Here's a simple example of the request parser. It looks for two arguments in
 the :attr:`flask.Request.values` dict: an integer and a string ::
 
-    from flask_restful import reqparse
+    from flask_reqparse import reqparse
 
     parser = reqparse.RequestParser()
     parser.add_argument('rate', type=int, help='Rate cannot be converted')
