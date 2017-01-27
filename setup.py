@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='flask-reqparse',
-    version='0.8',
+    version='1.0',
     license='BSD',
     author='smit thakkar',
     author_email='smitthakkar96@gmail.com',

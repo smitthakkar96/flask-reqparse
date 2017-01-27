@@ -5,6 +5,11 @@ flask_reqparse is a simple wrapper around flask request module that helps to par
 Request Parsing
 ===============
 
+Installation
+------------
+
+To install flask_reqparse use pip install flask_reqparse
+
 Basic Arguments
 ---------------
 
@@ -63,7 +68,7 @@ to specify alternate locations to pull the values from. Any variable on the
     parser.add_argument('picture', type=str, location='json')
 
     # Look only in Form
-    parser.add_argument('picture', type=str, location='form')
+    parser.add_argument('picture', type=str, location='file')
 
 
 Inspired from Flask-Restful Request Parser

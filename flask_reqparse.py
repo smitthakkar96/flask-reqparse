@@ -103,7 +103,6 @@ class RequestParser:
 
     def parse_args(self):
         args = {}
-        import pdb; pdb.set_trace()
         for r in self.required_args:
             try:
                 if r['source'] == 'json':
@@ -122,13 +121,12 @@ class RequestParser:
                     args[r['name']] = value
                 elif r['required'] and value is None:
                     if 'error_message' in r:
-                        import pdb; pdb.set_trace()
                         return abort(400, r['error_message'])
                     message = '{} must be passed as {} data'.format(r['name'], r['source'])
                     abort(400, r['error_message'])
             except KeyError:
                 if 'error_message' in r:
-                    return abort(400, r['error_message'])
-                message = '{} must be passed as {} data'.format(r['name'], r['source'])
+                    message = '{} must be passed as {} data'.format(r['name'], r['source'])
+                    abort(400, message)
                 abort(400, r['error_message'])
         return args
