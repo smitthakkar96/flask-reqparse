@@ -14,7 +14,8 @@ app = Flask(__name__)
     {
         'name' : "name",
         'required' : True,
-        'source' : 'args'
+        'source' : 'args',
+        'help' : 'Name cannot be null'
     }
 ])
 def json_demo(args):
