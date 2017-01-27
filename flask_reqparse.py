@@ -1,14 +1,12 @@
 from copy import deepcopy
+from functools import update_wrapper, wraps
 
-import collections
+
 import json
-from flask import current_app, request, jsonify
-from werkzeug.datastructures import MultiDict, FileStorage
-from werkzeug import exceptions
-import decimal
-import six
 from werkzeug.exceptions import default_exceptions, HTTPException, BadRequest
 from flask import make_response, abort as flask_abort, request
+
+parsed_args = {}
 
 class JSONHTTPException(HTTPException):
     """A base class for HTTP exceptions with ``Content-Type:
@@ -76,7 +74,7 @@ class RequestParser:
     required_args = []
     def add_argument(self, name, type = None, required = False, help = None, source = None):
         if source:
-            required_args.append({
+            self.required_args.append({
                 'name' : name,
                 'type' : type,
                 'required' : required,
@@ -101,32 +99,44 @@ class RequestParser:
                     'source' : 'json'
                 })
 
+    def validate_arguments(self, args):
+        def decorator(func):
+            @wraps(func)
+            def wrapped():
+                for arg in args:
+                    self.add_argument(**arg)
+                parsed_args = self.parse_args()
+                return func(parsed_args)
+            return wrapped
+        return decorator
+
+
     def parse_args(self):
+
         args = {}
         for r in self.required_args:
             try:
                 if r['source'] == 'json':
                     value = request.json.get(r['name'])
                 elif r['source'] == 'args':
-                    value = request.json.get(r['name'])
+                    value = request.args.get(r['name'])
                 elif r['source'] == 'form':
                     value = request.form.get(r['name'])
                 elif r['source'] == 'file':
                     value = request.files.get(r['name'])
-
                 if value:
-                    if 'type' in args:
-                        args[r['name']] = args['type'](value)
+                    if 'type' in r and r['type']:
+                        args[r['name']] = r['type'](value)
                         continue
                     args[r['name']] = value
                 elif r['required'] and value is None:
-                    if 'error_message' in r:
+                    if 'error_message' in r and r['error_message']:
                         return abort(400, r['error_message'])
                     message = '{} must be passed as {} data'.format(r['name'], r['source'])
-                    abort(400, r['error_message'])
-            except KeyError:
-                if 'error_message' in r:
-                    message = '{} must be passed as {} data'.format(r['name'], r['source'])
                     abort(400, message)
-                abort(400, r['error_message'])
+            except KeyError:
+                if 'error_message' in r and r['error_message']:
+                    abort(400, r['error_message'])
+                message = '{} must be passed as {} data'.format(r['name'], r['source'])
+                abort(400, message)
         return args
