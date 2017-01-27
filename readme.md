@@ -8,8 +8,10 @@ Request Parsing
 Installation
 ------------
 
-To install flask_reqparse use pip install flask_reqparse
-To parse the arguments with flask_reqparse here is example
+To install flask_reqparse use  
+````pip install flask_reqparse````
+
+To parse the arguments with flask_reqparse, here is an example
 
 ``` python
 from flask import Flask, jsonify
